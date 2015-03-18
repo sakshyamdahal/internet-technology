@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<script>
+
+//global variables
+var context;
+var cHeight=300, cWidth=300;
+var startX=20, startY=20;
+var radi = 0;
+var color = "#00FA9A";
+
+//begin ball class
+
+function mBall(x, y, radi, color, xSpeed, ySpeed){ 
+	this.x = x; 
+    this.y = y;
+    this.radi = radi;
+    this.color = color;
+	this.xSpeed = xSpeed;
+	this.ySpeed = ySpeed;
+	this.draw = draw;
+	this.move1 = move1;
+	this.move2 = move2;
+}
+
+function draw(context){	
+  	context.beginPath();
+  	context.fillStyle=this.color;
+  	context.arc(this.x,this.y,this.radi,0,Math.PI*2,true);
+  	context.closePath();
+ 	context.fill();
+}
+
+function move1(){
+	if( this.x<0 || this.x>cWidth ) this.xSpeed=-this.xSpeed; 
+	if( this.y<0 || this.y>cHeight) this.ySpeed=-this.ySpeed; 
+	this.x+=this.xSpeed; 
+	this.y+=this.ySpeed;
+}
+
+function move2(x , y){
+	this.x = x;
+	this.y = y;
+}
+
+// end ball class
+
+function onClick(e){
+     ball.move2(e.pageX, e.pageY);
+}
+
+function update(){
+	context.clearRect(0,0, cHeight,cWidth);
+	ball.move1();
+	ball.draw(context);
+}
+
+function init() {
+  myCanvas.height=cHeight; myCanvas.width=cWidth;
+  myCanvas.addEventListener("click", onClick, false);
+  context= myCanvas.getContext('2d');
+  radi = Math.floor(Math.random()*20 + 1);
+  ball = new mBall(startX, startY, radi, color, 10,10); 
+ 
+  setInterval(update,10);
+}
+
+
+</script>
+<body onLoad="init();">
+  <canvas id="myCanvas" style="border:1px solid">
+  </canvas>
+</body>
