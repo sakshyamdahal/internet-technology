@@ -3,10 +3,13 @@
 
 //global variables
 var context;
-var cHeight=300, cWidth=300;
+var cHeight=400, cWidth=400;
 var startX=20, startY=20;
 var radi = 0;
-var color = "#00FA9A";
+var colors = ['red', 'green', 'blue', 'orange', 'black', 'brown', 'pink', '#5d8aa8', '#00ffff','#0d98ba',
+              '#7b68ee', '#ae0c00', '#2c1608', '#922724', '#c5b358', '#00755e'];
+
+ 
 
 //begin ball class
 
@@ -42,6 +45,24 @@ function move2(x , y){
 	this.y = y;
 }
 
+function collide(ba, ball)
+{
+
+  if ( (ball.x >= ba.x - ba.radi && ball.x <= ba.x + ba.radi)  && (ball.y >= ba.y - ba.radi && ball.y <= ba.y + ba.radi))
+  {
+       ball.xSpeed = -ball.xSpeed;
+       ba.xSpeed = -ba.xSpeed;
+  }
+
+  if ( (ba.x >= ball.x - ball.radi && ba.x <= ball.x + ball.radi)  && (ba.y >= ball.y - ball.radi && ba.y <= ball.y + ball.radi))
+  {
+      ba.ySpeed = -ba.ySpeed;
+      ball.ySpeed = - ball.ySpeed;
+  }
+
+  
+}
+
 // end ball class
 
 function onClick(e){
@@ -52,14 +73,31 @@ function update(){
 	context.clearRect(0,0, cHeight,cWidth);
 	ball.move1();
 	ball.draw(context);
+
+  newBall.move1();
+  newBall.draw(context);
+  collide(ball, newBall);
+
+  
+  
 }
 
 function init() {
   myCanvas.height=cHeight; myCanvas.width=cWidth;
   myCanvas.addEventListener("click", onClick, false);
   context= myCanvas.getContext('2d');
-  radi = Math.floor(Math.random()*20 + 1);
-  ball = new mBall(startX, startY, radi, color, 10,10); 
+  radi = Math.floor(Math.random()*20 + 10);
+  color = colors[Math.floor(Math.random() * colors.length)];
+  ball = new mBall(startX, startY, radi, color, 5,5); 
+
+  // second ball
+  speed2 = Math.floor(Math.random() * 5 + 5);
+  color = colors[Math.floor(Math.random() * colors.length)];
+  startX = Math.floor((Math.random() * 20) + 1)*startX;
+  startY =  Math.floor((Math.random() * 20) + 1) * startY;
+
+  
+  newBall = new mBall(startX,startY,radi, color, 6, 6);
  
   setInterval(update,10);
 }
